@@ -30,7 +30,7 @@ def initParams():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-i", "--in-file", type=str, help="Input file containing train data", default=None)
     parser.add_argument("-o", "--out-fold", type=str, help="output folder", default='../models/def')
-    parser.add_argument("-gpu", "--gpu_id", type=str, help="gpu id", default='2')
+    parser.add_argument("-gpu", "--gpu_id", type=str, help="gpu id", default='3')
     args = parser.parse_args()
 
     params = {}
@@ -59,7 +59,7 @@ def initParams():
 
     params['CUDA'] = torch.cuda.is_available()
     # params['DEVICE'] = torch.device("cuda" if params['CUDA'] else "cpu") 
-    params['kwargs'] = {'num_workers': 10} if params['CUDA'] else {}
+    params['kwargs'] = {'num_workers': 10, 'pin_memory': True} if params['CUDA'] else {}
 
     return params
 
@@ -68,10 +68,12 @@ def train():
 
     os.environ["CUDA_VISIBLE_DEVICES"] = params['GPU_ID']
 
+    model = SPCH2FLM().cuda()
+    print model
+ 
     dataset = FaceLandmarksDataset(params)
 
-    model = SPCH2FLM().cuda()
-
+    
     optimizer = optim.Adam(model.parameters(), lr=params['LEARNING_RATE'])
 
     train_loader = torch.utils.data.DataLoader(dataset,
@@ -81,17 +83,23 @@ def train():
 
     prev_loss = np.inf
     model.train()
+    print '++++='
     for epoch in tqdm(range(params['NUM_EPOCH'])):
         lossDict = defaultdict(list)
+        print '++++='
         with trange(len(train_loader)) as t:
             for i in t:
+                print '++++='
                 (data, target) = next(iter(train_loader))
+                print '++++='
                 data, target = data.cuda(), target.cuda()
+                print '++++='
                 optimizer.zero_grad()
                 output = model(data)
                 loss = F.l1_loss(output, target, reduce=True)
                 lossDict['abs'].append(loss.item())
                 loss.backward()
+                print '++++='
                 optimizer.step()
                 t.set_description("loss: %.5f, cur_loss: %.5f" % (np.mean(lossDict['abs']), lossDict['abs'][-1]))
 

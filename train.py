@@ -30,6 +30,7 @@ def initParams():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-i", "--in-file", type=str, help="Input file containing train data", default=None)
     parser.add_argument("-o", "--out-fold", type=str, help="output folder", default='../models/def')
+    parser.add_argument("-gpu", "--gpu_id", type=str, help="gpu id", default='2')
     args = parser.parse_args()
 
     params = {}
@@ -57,12 +58,15 @@ def initParams():
 
     params['CUDA'] = torch.cuda.is_available()
     # params['DEVICE'] = torch.device("cuda" if params['CUDA'] else "cpu") 
-    params['kwargs'] = {'num_workers': 1} if params['CUDA'] else {}
+    params['kwargs'] = {'num_workers': 10} if params['CUDA'] else {}
 
     return params
 
 def train():
     params = initParams()
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = params['gpu_id']
+
     dataset = FaceLandmarksDataset(params)
 
     model = SPCH2FLM().cuda()

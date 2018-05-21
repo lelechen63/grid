@@ -18,11 +18,9 @@ class FaceLandmarksDataset(Dataset):
 
     def __init__(self, params):
         self.params = params
-        self.dset = h5py.File(self.params['IN_PATH'], 'r')
 
 
         self.lmarkDSET =  h5py.File(os.path.join(self.params['IN_PATH'],'flmark.h5' ) , 'r')['flmark'][:,:,:]
-        self.speechDSET = []
         self.speechDSET =  h5py.File(os.path.join(self.params['IN_PATH'],'speech.h5' ) , 'r')['speech']
 
         self.num_samples = self.lmarkDSET.shape[0]

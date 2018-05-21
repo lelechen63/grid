@@ -58,17 +58,14 @@ def initParams():
         file.write(json.dumps(params, sort_keys=True, separators=('\n', ':')))
 
     params['CUDA'] = torch.cuda.is_available()
-    params['DEVICE'] = torch.device("cuda" if params['CUDA'] else "cpu") 
+    params['DEVICE'] = torch.device("cuda:{}".format(params['GPU_ID']) if params['CUDA'] else "cpu") 
     params['kwargs'] = {'num_workers': 10, 'pin_memory': True} if params['CUDA'] else {}
 
     return params
 
 def train():
     params = initParams()
-
-    os.environ["CUDA_VISIBLE_DEVICES"] = params['GPU_ID']
-    print params['GPU_ID']
-    print params['CUDA'] 
+    print params['DEVICE']
 
     model = SPCH2FLM().to(device=params['DEVICE'])
     print model

@@ -59,7 +59,7 @@ def initParams():
 
     params['CUDA'] = torch.cuda.is_available()
     params['DEVICE'] = torch.device("cuda:{}".format(params['GPU_ID']) if params['CUDA'] else "cpu") 
-    params['kwargs'] = {'num_workers': 10, 'pin_memory': True} if params['CUDA'] else {}
+    params['kwargs'] = {'num_workers': 1, 'pin_memory': True} if params['CUDA'] else {}
 
     return params
 

@@ -43,6 +43,7 @@ def initParams():
     params['OUT_SHAPE'] = 6
     params['IN_PATH'] = args.in_file
     params['OUT_PATH'] = args.out_fold
+    params['GPU_ID'] = args.gpu_id
     params['NUM_IT'] = int(2108771/params['BATCHSIZE'])
     params['NUM_EPOCH'] = 200
     params['SEQ'] = False
@@ -65,7 +66,7 @@ def initParams():
 def train():
     params = initParams()
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = params['gpu_id']
+    os.environ["CUDA_VISIBLE_DEVICES"] = params['GPU_ID']
 
     dataset = FaceLandmarksDataset(params)
 

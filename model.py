@@ -1,5 +1,5 @@
 import torch.nn as nn
-import torch.nn.init as F
+import torch.nn.functional as F
 import torch.nn.init as weightinit
 
 class SPCH2FLM(nn.Module):

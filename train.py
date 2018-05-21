@@ -67,6 +67,8 @@ def train():
     params = initParams()
 
     os.environ["CUDA_VISIBLE_DEVICES"] = params['GPU_ID']
+    print params['GPU_ID']
+    print params['CUDA'] 
 
     model = SPCH2FLM().cuda()
     print model

@@ -58,7 +58,7 @@ def initParams():
         file.write(json.dumps(params, sort_keys=True, separators=('\n', ':')))
 
     params['CUDA'] = torch.cuda.is_available()
-    # params['DEVICE'] = torch.device("cuda" if params['CUDA'] else "cpu") 
+    params['DEVICE'] = torch.device("cuda" if params['CUDA'] else "cpu") 
     params['kwargs'] = {'num_workers': 10, 'pin_memory': True} if params['CUDA'] else {}
 
     return params
@@ -70,7 +70,7 @@ def train():
     print params['GPU_ID']
     print params['CUDA'] 
 
-    model = SPCH2FLM().cuda()
+    model = SPCH2FLM().to(device=params['DEVICE'])
     print model
  
     dataset = FaceLandmarksDataset(params)
@@ -94,7 +94,7 @@ def train():
                 print '++++='
                 (data, target) = next(iter(train_loader))
                 print '++++='
-                data, target = data.cuda(), target.cuda()
+                data, target = data.to(device=params['DEVICE']), target.to(device=params['DEVICE'])
                 print '++++='
                 optimizer.zero_grad()
                 output = model(data)
